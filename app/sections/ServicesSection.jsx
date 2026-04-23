@@ -81,40 +81,35 @@ export default function ServicesSection() {
     const cards = cardsRef.current;
     const dots = dotsRef.current;
 
-    // STEP 1: INITIAL CAROUSEL LAYOUT
-    // Card 1: Center (no blur), Card 2: Right (blur), Card 3: Far Right (more blur)
-    cards.forEach((card, i) => {
-      if (i === 0) {
-        // Card 1 - Center
-        gsap.set(card, {
-          opacity: 1, x: 0, scale: 1, rotateY: 0,
-          zIndex: 20, visibility: "visible", filter: "blur(0px)",
-        });
-      } else if (i === 1) {
-        // Card 2 - Right side
-        gsap.set(card, {
-          opacity: 0.7, x: 280, scale: 0.85, rotateY: 10,
-          zIndex: 15, visibility: "visible", filter: "blur(3px)",
-        });
-      } else if (i === 2) {
-        // Card 3 - Far right
-        gsap.set(card, {
-          opacity: 0.4, x: 480, scale: 0.7, rotateY: 15,
-          zIndex: 10, visibility: "visible", filter: "blur(5px)",
-        });
-      } else {
-        // Other cards - Hidden
-        gsap.set(card, {
-          opacity: 0, visibility: "hidden", x: 700,
-          scale: 0.6, rotateY: 20, zIndex: 5, filter: "blur(8px)",
-        });
-      }
-    });
+    // Fan carousel positions — cards spread out like a hand of cards
+    // rotateZ gives the tilt; y drops side cards slightly; x offsets them horizontally
+    const POS = {
+      center:      { x: 0,    y: 0, rotateZ: 0,   scale: 1,    opacity: 1,    zIndex: 20, filter: "blur(0px)",  visibility: "visible"  },
+      right1:      { x: 205,  y: 0, rotateZ: 13,  scale: 0.86, opacity: 0.72, zIndex: 15, filter: "blur(2px)",  visibility: "visible"  },
+      right2:      { x: 355,  y: 0, rotateZ: 24,  scale: 0.72, opacity: 0.45, zIndex: 10, filter: "blur(4px)",  visibility: "visible"  },
+      left1:       { x: -205, y: 0, rotateZ: -13, scale: 0.86, opacity: 0.72, zIndex: 15, filter: "blur(2px)",  visibility: "visible"  },
+      left2:       { x: -355, y: 0, rotateZ: -24, scale: 0.72, opacity: 0.45, zIndex: 10, filter: "blur(4px)",  visibility: "visible"  },
+      hiddenRight: { x: 520,  y: 0, rotateZ: 34,  scale: 0.6,  opacity: 0,    zIndex: 5,  filter: "blur(7px)",  visibility: "hidden"   },
+      hiddenLeft:  { x: -520, y: 0, rotateZ: -34, scale: 0.6,  opacity: 0,    zIndex: 5,  filter: "blur(7px)",  visibility: "hidden"   },
+    };
+
+    // Get the fan position for a card given its offset from the active index
+    const getPos = (rel) => {
+      if (rel === 0)  return POS.center;
+      if (rel === 1)  return POS.right1;
+      if (rel === 2)  return POS.right2;
+      if (rel === -1) return POS.left1;
+      if (rel === -2) return POS.left2;
+      return rel > 0  ? POS.hiddenRight : POS.hiddenLeft;
+    };
+
+    // STEP 1: SET INITIAL FAN LAYOUT (card 0 is active)
+    cards.forEach((card, i) => gsap.set(card, getPos(i)));
 
     gsap.set(dots, { width: 8, opacity: 0.3 });
     gsap.set(dots[0], { width: 40, opacity: 1 });
 
-    // STEP 2: SCROLL TRIGGER TIMELINE
+    // STEP 2: SCROLL-PINNED TIMELINE
     const mainTimeline = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
@@ -125,73 +120,56 @@ export default function ServicesSection() {
         scrub: 1.0,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          const progress = self.progress;
-          const cardProgress = progress * totalCards;
-          const activeCard = Math.min(totalCards - 1, Math.max(0, Math.floor(cardProgress)));
-          
-          dots.forEach((dot, i) => {
+          const activeCard = Math.min(
+            totalCards - 1,
+            Math.max(0, Math.floor(self.progress * totalCards))
+          );
+          dots.forEach((dot, i) =>
             gsap.to(dot, {
-              width: i === activeCard ? 40 : 8,
-              opacity: i === activeCard ? 1 : 0.3,
+              width:   i === activeCard ? 40 : 8,
+              opacity: i === activeCard ? 1  : 0.3,
               duration: 0.3,
-            });
-          });
+            })
+          );
         },
       },
     });
 
+    // Hold the first card for a beat
+    mainTimeline.to({}, { duration: 0.3 }, 0);
+
     // STEP 3: ANIMATE EACH CARD TRANSITION
-    SERVICES.forEach((_, index) => {
-      if (index === 0) {
-        // Hold first card
-        mainTimeline.to({}, { duration: 0.3 }, 0);
-      } else {
-        const prevCard = cards[index - 1];
-        const currentCard = cards[index];
-        const nextCard = cards[index + 1];
-        const segmentStart = index * 1;
-        
-        // Previous card moves to LEFT and fades (blur it)
-        mainTimeline.to(prevCard, {
-          opacity: 0.3, x: -300, scale: 0.7, rotateY: -10,
-          filter: "blur(5px)",
-          duration: 0.5, ease: "power2.inOut", zIndex: 5,
-        }, segmentStart);
-        
-        // Current card moves from RIGHT to CENTER (remove blur)
-        mainTimeline.to(currentCard, {
-          opacity: 1, x: 0, scale: 1, rotateY: 0,
-          filter: "blur(0px)",
-          duration: 0.5, ease: "back.out(0.6)",
-          zIndex: 20, visibility: "visible",
-        }, segmentStart);
-        
-        // Next card (if exists) moves closer from far right (light blur)
-        if (nextCard) {
-          mainTimeline.to(nextCard, {
-            opacity: 0.7, x: 280, scale: 0.85, rotateY: 10,
-            filter: "blur(3px)",
-            duration: 0.5, ease: "power2.out",
-            zIndex: 15, visibility: "visible",
-          }, segmentStart);
-        }
-        
-        // Card after next (if exists) appears at far right (more blur)
-        const nextNextCard = cards[index + 2];
-        if (nextNextCard) {
-          mainTimeline.to(nextNextCard, {
-            opacity: 0.4, x: 480, scale: 0.7, rotateY: 15,
-            filter: "blur(5px)",
-            duration: 0.5, ease: "power2.out",
-            zIndex: 10, visibility: "visible",
-          }, segmentStart);
-        }
-      }
+    // On every step, recalculate all cards' fan positions relative to the new active index
+    SERVICES.forEach((_, activeIdx) => {
+      if (activeIdx === 0) return;
+      const segmentStart = activeIdx * 1;
+
+      cards.forEach((card, cardIdx) => {
+        const rel = cardIdx - activeIdx;
+        const pos = getPos(rel);
+        mainTimeline.to(
+          card,
+          {
+            x:        pos.x,
+            y:        pos.y,
+            rotateZ:  pos.rotateZ,
+            scale:    pos.scale,
+            opacity:  pos.opacity,
+            zIndex:   pos.zIndex,
+            filter:   pos.filter,
+            // only unhide cards coming into view, never re-hide mid-animation
+            ...(pos.visibility === "visible" ? { visibility: "visible" } : {}),
+            duration: 0.5,
+            ease: rel === 0 ? "back.out(0.7)" : "power2.inOut",
+          },
+          segmentStart
+        );
+      });
     });
 
     return () => {
       mainTimeline.kill();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
 
@@ -201,7 +179,7 @@ export default function ServicesSection() {
       className="relative w-full bg-white"
       style={{ height: "100vh" }}
     >
-      <div className="relative w-full h-screen overflow-hidden bg-gradient-to-b from-[#f8f8f8] to-[#efefef]">
+      <div className="relative w-full h-screen bg-gradient-to-b from-[#f8f8f8] to-[#efefef]" style={{ overflow: "clip" }}>
         
         {/* Top section */}
         <div className="absolute top-8 left-0 right-0 z-30 px-6 md:px-12">
@@ -216,8 +194,8 @@ export default function ServicesSection() {
         </div>
 
         {/* Cards container */}
-        <div className="absolute inset-0 flex items-center justify-center z-10">
-          <div className="relative" style={{ width: CARD_W, height: CARD_H }}>
+        <div className="absolute inset-0 flex items-center justify-center z-10" style={{ paddingTop: "200px", paddingBottom: "80px" }}>
+          <div className="relative" style={{ width: CARD_W, height: CARD_H + 80 }}>
             {SERVICES.map((service, idx) => (
               <div
                 key={service.id}
@@ -230,6 +208,7 @@ export default function ServicesSection() {
                   overflow: "hidden",
                   boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1)",
                   background: service.bg,
+                  transformOrigin: "bottom center",
                   transformStyle: "preserve-3d",
                   backfaceVisibility: "hidden",
                   willChange: "transform, opacity",
@@ -316,27 +295,7 @@ export default function ServicesSection() {
           </div>
         </div>
 
-        {/* Bottom section */}
-        <div className="absolute bottom-8 left-0 right-0 z-30 px-6 md:px-12">
-          <div className="flex justify-between items-center">
-            {/* Pagination dots */}
-            <div className="flex gap-2">
-              {SERVICES.map((_, idx) => (
-                <div
-                  key={idx}
-                  ref={(el) => (dotsRef.current[idx] = el)}
-                  className="h-[2px] bg-black/30 rounded-full transition-all duration-300"
-                  style={{ width: 8, opacity: 0.3 }}
-                />
-              ))}
-            </div>
 
-            {/* Scroll hint */}
-            <p className="text-black/30 text-xs tracking-[0.25em] uppercase">
-              SCROLL TO EXPLORE
-            </p>
-          </div>
-        </div>
       </div>
 
       <style jsx>{`
