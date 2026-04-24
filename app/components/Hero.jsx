@@ -10,7 +10,46 @@ const FLOW_IMAGES = [
   "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=400&fit=crop&q=80",
 ];
 
-export default function Hero() {
+const ScrambleText = ({ text, delay = 0, start = false }) => {
+  const [displayText, setDisplayText] = useState("");
+
+  useEffect(() => {
+    if (!start) return; // Wait for start signal (intro complete)
+
+    let timeout;
+    let interval;
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*+<>?[]{}";
+
+    timeout = setTimeout(() => {
+      let iterations = 0;
+      interval = setInterval(() => {
+        setDisplayText(
+          text.split("").map((letter, index) => {
+            if (index < iterations) return letter;
+            if (letter === " ") return " ";
+            return chars[Math.floor(Math.random() * chars.length)];
+          }).join("")
+        );
+
+        iterations += 1 / 2; // Speed of revealing
+
+        if (iterations >= text.length) {
+          clearInterval(interval);
+          setDisplayText(text);
+        }
+      }, 30);
+    }, delay);
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(interval);
+    };
+  }, [text, delay, start]);
+
+  return <>{displayText || '\u00A0'}</>;
+};
+
+export default function Hero({ introComplete = false }) {
   const [images, setImages] = useState([]);
   const nextIdRef = useRef(0);
   const lastSpawnTimeRef = useRef(0);
@@ -191,8 +230,12 @@ export default function Hero() {
             fontSize: "clamp(2.8rem, 10vw, 8rem)",
           }}
         >
-          <span className="text-gray-900 block">WE BUILD</span>
-          <span className="grad block">BRANDS THAT CONVERT</span>
+          <span className="text-gray-900 block">
+            <ScrambleText text="WE BUILD" delay={0} start={introComplete} />
+          </span>
+          <span className="grad block">
+            <ScrambleText text="BRANDS THAT CONVERT" delay={600} start={introComplete} />
+          </span>
         </h1>
 
         <p 

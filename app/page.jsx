@@ -19,18 +19,19 @@ import CursorFollower from "./components/CursorFollower";
 
 export default function Home() {
   const [loaderComplete, setLoaderComplete] = useState(false);
+  const [introComplete, setIntroComplete] = useState(false);
 
   return (
     <main>
       {!loaderComplete ? (
         <Loader onComplete={() => setLoaderComplete(true)} />
       ) : (
-        <GlitchTransition />
+        <GlitchTransition onComplete={() => setIntroComplete(true)} />
       )}
 
       <CursorFollower />
       <Navbar />
-      <Hero />
+      <Hero introComplete={introComplete} />
       <MarqueeText />
       <ImageReveal />
       <AboutSection />

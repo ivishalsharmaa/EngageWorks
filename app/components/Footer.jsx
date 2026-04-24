@@ -8,12 +8,7 @@ const LEGAL = ["Privacy Policy", "Terms of Service", "Cookie Policy"];
 export default function Footer() {
   return (
     <footer className="bg-[#f7f6f2] border-t border-black/[0.07] px-8 md:px-16 pt-20 pb-10 relative overflow-hidden">
-      {/* Ghost big type */}
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center overflow-hidden pointer-events-none select-none">
-        <span className="font-display text-[clamp(4rem,13vw,16rem)] leading-none text-black/[0.03] tracking-wider whitespace-nowrap translate-y-[30%]">
-          ENGAGEWORKS
-        </span>
-      </div>
+
 
       <div className="max-w-[1440px] mx-auto relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16 pb-16 border-b border-black/[0.07]">
