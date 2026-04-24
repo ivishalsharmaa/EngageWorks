@@ -26,7 +26,7 @@ export default function Home() {
       {!loaderComplete ? (
         <Loader onComplete={() => setLoaderComplete(true)} />
       ) : (
-        <GlitchTransition onComplete={() => setIntroComplete(true)} />
+        !introComplete && <GlitchTransition onComplete={() => setIntroComplete(true)} />
       )}
 
       <CursorFollower />
