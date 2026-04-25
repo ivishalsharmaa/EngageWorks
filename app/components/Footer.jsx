@@ -52,9 +52,11 @@ export default function Footer() {
           <div>
             <p className="text-xs tracking-[0.25em] text-gray-400 uppercase mb-6">Get in Touch</p>
             <ul className="flex flex-col gap-3 text-sm text-gray-500">
-              <li><a href="mailto:hello@engageworks.in" className="hover-line hover:text-gray-900 transition-colors duration-300">hello@engageworks.in</a></li>
+              <li><a href="https://wa.me/916371106588" target="_blank" rel="noreferrer" className="hover-line hover:text-gray-900 transition-colors duration-300">+91 63711 06588</a></li>
+              <li><a href="tel:+919023884833" className="hover-line hover:text-gray-900 transition-colors duration-300">+91 90238 84833</a></li>
+              <li><a href="mailto:engageworks00@gmail.com" className="hover-line hover:text-gray-900 transition-colors duration-300">engageworks00@gmail.com</a></li>
               <li><a href="https://instagram.com/_engage.works_" target="_blank" rel="noreferrer" className="hover-line hover:text-gray-900 transition-colors duration-300">@_engage.works_</a></li>
-              <li className="text-gray-400">Mumbai, India</li>
+              <li className="text-gray-400">Jharsuguda, India</li>
             </ul>
             <a href="#contact" className="btn-primary mt-8 inline-flex text-xs py-3 px-6">Start a Project ↗</a>
           </div>

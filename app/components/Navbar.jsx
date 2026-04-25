@@ -33,16 +33,16 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ── Navbar bar ─────────────────────────────────────────────── */}
-      <header
-        className="fixed top-0 left-0 right-0 z-[200] flex justify-between items-center px-8 md:px-16 py-5 bg-transparent"
-      >
-        {/* Logo — left */}
+      {/* ── Navbar Items ─────────────────────────────────────────────── */}
+      {/* Logo — absolute so it scrolls away */}
+      <div className="absolute top-0 left-0 px-8 md:px-16 py-5 z-[200]">
         <Link href="/" className="flex items-center gap-2">
           <span className="font-display text-xl tracking-[0.18em] text-gray-900 dark:text-white">ENGAGEWORKS</span>
         </Link>
+      </div>
 
-        {/* MENU pill — right */}
+      {/* MENU pill — fixed so it stays on screen */}
+      <div className="fixed top-0 right-0 px-8 md:px-16 py-5 z-[200]">
         <button
           onClick={() => setOpen(p => !p)}
           data-cursor
@@ -58,7 +58,7 @@ export default function Navbar() {
             className={`w-2 h-2 rounded-full inline-block transition-colors duration-300 ${open ? "bg-white" : "bg-purple-600"}`}
           />
         </button>
-      </header>
+      </div>
 
       {/* ── Fullscreen overlay menu ─────────────────────────────────── */}
       <AnimatePresence>

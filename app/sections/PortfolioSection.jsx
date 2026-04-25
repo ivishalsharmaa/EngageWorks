@@ -6,17 +6,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const PROJECTS = [
-  { number: "01", client: "Aura Dining",   category: "Web Development · 2024",      description: "A cinematic dining experience with scroll-driven animations.", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1600&h=900&fit=crop" },
-  { number: "02", client: "Lumina Tech",   category: "Branding & Web · 2024",       description: "Complete brand identity and digital presence for a fast-growing tech startup.", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1600&h=900&fit=crop" },
-  { number: "03", client: "Vela Fashion",  category: "E-Commerce · 2023",           description: "A premium e-commerce experience that drove 3× revenue growth in Q1.", image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=1600&h=900&fit=crop" },
-  { number: "04", client: "Nova Fitness",  category: "Performance Marketing · 2023", description: "Multi-channel campaign delivering measurable ROI across channels.", image: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600&h=900&fit=crop" },
+  { number: "01", client: "GoTravio Travels", category: "Web Development · 2024", description: "India's premier human-powered travel platform — cabs, trains, flights & custom tour packages.", image: "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&h=900&fit=crop", link: "https://gotraviotravels.netlify.app/" },
+  { number: "02", client: "New Prem Glass House", category: "Web Development · 2024", description: "Premium glass, hardware, plywood & modular interiors — Jharsuguda's most trusted interior partner since 2010.", image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1600&h=900&fit=crop", link: "https://newpremglasshouse.in/" },
 ];
 
 const HERO_IMAGE  = "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&h=900&fit=crop";
-const HERO_PCT    = 250;                                   // scroll % for hero expand
-const PROJ_PCT    = (PROJECTS.length - 1) * 100;          // 300 %  (3 transitions)
-const TOTAL_PCT   = HERO_PCT + PROJ_PCT;                  // 550 %
-const HERO_RATIO  = HERO_PCT / TOTAL_PCT;                 // ~0.454
+const HERO_PCT    = 250;                                  // scroll % for hero expand
+const PROJ_PCT    = Math.max(150, (PROJECTS.length - 1) * 150); // allocate proportional scroll space 
+const TOTAL_PCT   = HERO_PCT + PROJ_PCT;                  
+const HERO_RATIO  = HERO_PCT / TOTAL_PCT;                 
 
 export default function PortfolioSection() {
   const secRef       = useRef(null);
@@ -33,34 +31,96 @@ export default function PortfolioSection() {
   const catRef       = useRef(null);
   const descRef      = useRef(null);
   const numRef       = useRef(null);
+  const linkRef      = useRef(null);
   const activeIdx    = useRef(0);
 
   const switchProject = useCallback((next, prev) => {
     if (next === prev) return;
-    gsap.to(bgRefs.current[prev], { opacity: 0, duration: 0.7, ease: "power2.inOut" });
-    gsap.to(bgRefs.current[next], { opacity: 1, duration: 0.7, ease: "power2.inOut" });
+
+    const goingForward = next > prev;
+    const containerEl  = overlayRef.current;
+
+    if (containerEl) {
+      if (goingForward) {
+        // ── SCROLL DOWN: new bg expands from its thumbnail card ──
+        const cardEl  = cardRefs.current[next];
+        const cardRect = cardEl.getBoundingClientRect();
+        const contRect = containerEl.getBoundingClientRect();
+
+        const top    = cardRect.top    - contRect.top;
+        const right  = contRect.right  - cardRect.right;
+        const bottom = contRect.bottom - cardRect.bottom;
+        const left   = cardRect.left   - contRect.left;
+
+        // Place next bg exactly over its thumbnail, above current
+        gsap.set(bgRefs.current[next], {
+          opacity: 1, zIndex: 5,
+          clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px round 8px)`
+        });
+
+        // Expand to full screen
+        gsap.to(bgRefs.current[next], {
+          clipPath: "inset(0px 0px 0px 0px round 0px)",
+          duration: 1.2, ease: "power4.inOut",
+          onComplete: () => {
+            gsap.set(bgRefs.current[prev], { opacity: 0, zIndex: 0 });
+            gsap.set(bgRefs.current[next], { zIndex: 1 });
+          }
+        });
+
+      } else {
+        // ── SCROLL UP: prev bg shrinks back into its own card ──
+        const cardEl   = cardRefs.current[prev];
+        const cardRect = cardEl.getBoundingClientRect();
+        const contRect = containerEl.getBoundingClientRect();
+
+        const top    = cardRect.top    - contRect.top;
+        const right  = contRect.right  - cardRect.right;
+        const bottom = contRect.bottom - cardRect.bottom;
+        const left   = cardRect.left   - contRect.left;
+
+        // Ensure next bg is visible underneath
+        gsap.set(bgRefs.current[next], { opacity: 1, zIndex: 1,
+          clipPath: "inset(0px 0px 0px 0px round 0px)" });
+        // Prev bg is currently full screen, above next — shrink it into its card
+        gsap.set(bgRefs.current[prev], { zIndex: 5 });
+
+        gsap.to(bgRefs.current[prev], {
+          clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px round 8px)`,
+          duration: 1.2, ease: "power4.inOut",
+          onComplete: () => {
+            gsap.set(bgRefs.current[prev], { opacity: 0, zIndex: 0,
+              clipPath: "inset(0px 0px 0px 0px round 0px)" });
+            gsap.set(bgRefs.current[next], { zIndex: 1 });
+          }
+        });
+      }
+    } else {
+      // Fallback crossfade
+      gsap.to(bgRefs.current[prev], { opacity: 0, duration: 0.7, ease: "power2.inOut" });
+      gsap.to(bgRefs.current[next], { opacity: 1, duration: 0.7, ease: "power2.inOut" });
+    }
 
     const els = [numRef.current, titleRef.current, catRef.current, descRef.current];
     gsap.timeline()
-      .to(els, { opacity: 0, y: -16, duration: 0.22, ease: "power2.in", stagger: 0.04 })
+      .to(els, { opacity: 0, y: -20, duration: 0.3, ease: "power3.in", stagger: 0.05 })
       .call(() => {
         if (numRef.current)   numRef.current.textContent   = PROJECTS[next].number;
         if (titleRef.current) titleRef.current.textContent = PROJECTS[next].client;
         if (catRef.current)   catRef.current.textContent   = PROJECTS[next].category;
         if (descRef.current)  descRef.current.textContent  = PROJECTS[next].description;
+        if (linkRef.current)  linkRef.current.href         = PROJECTS[next].link;
       })
-      .to(els, { opacity: 1, y: 0, duration: 0.32, ease: "power3.out", stagger: 0.05 });
+      .to(els, { opacity: 1, y: 0, duration: 0.45, ease: "power4.out", stagger: 0.06 });
 
     cardRefs.current.forEach((card, i) => {
       if (!card) return;
       if (i === next) {
-        // Active card: lift up with a pop/bounce — feels like it's "opening"
         card.style.borderColor = "#a855f7";
         gsap.timeline()
           .to(card, { scale: 1.18, y: -10, duration: 0.18, ease: "power2.out" })
           .to(card, { scale: 1.08, y: -5,  duration: 0.4,  ease: "back.out(2.5)" });
       } else {
-        // Inactive cards: settle back down
         card.style.borderColor = "rgba(255,255,255,0.18)";
         gsap.to(card, { scale: 1, y: 0, duration: 0.35, ease: "power2.out" });
       }
@@ -83,7 +143,11 @@ export default function PortfolioSection() {
       gsap.set(imgRef.current,      { scale: 1, force3D: true });
       gsap.set([leftTextRef.current, rightTextRef.current], { opacity: 1 });
       gsap.set(overlayRef.current,  { opacity: 0 });
-      bgRefs.current.forEach((el, i) => el && gsap.set(el, { opacity: i === 0 ? 1 : 0 }));
+      bgRefs.current.forEach((el, i) => el && gsap.set(el, { 
+        opacity: i === 0 ? 1 : 0, 
+        zIndex: i === 0 ? 1 : 0,
+        clipPath: "inset(0px 0px 0px 0px round 0px)"
+      }));
       gsap.set([numRef.current, titleRef.current, catRef.current, descRef.current], { opacity: 1, y: 0 });
       cardRefs.current.forEach((c, i) => {
         if (!c) return;
@@ -133,14 +197,12 @@ export default function PortfolioSection() {
       tl.to(overlayRef.current, { opacity: 1, ease: "none", duration: overlayFadeDur }, heroDur);
       // dummy tween to fill project phase so the timeline has the right duration
       tl.to({}, { duration: totalDur - heroDur }, heroDur);
-
-      setTimeout(() => ScrollTrigger.refresh(), 150);
     }, secRef);
     return () => ctx.revert();
   }, [switchProject]);
 
   return (
-    <section ref={secRef} id="work" style={{ overflowX: "hidden" }}>
+    <section ref={secRef} id="work">
 
       {/* ── Single pinned container ── */}
       <div
@@ -175,7 +237,7 @@ export default function PortfolioSection() {
           {/* Per-project background images */}
           {PROJECTS.map((p, i) => (
             <div key={p.client} ref={el => { bgRefs.current[i] = el; }}
-              style={{ position: "absolute", inset: 0, opacity: i === 0 ? 1 : 0, willChange: "opacity" }}>
+              style={{ position: "absolute", inset: 0, opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 1 : 0, willChange: "opacity, clip-path" }}>
               <img src={p.image} alt={p.client} draggable={false}
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.08) 100%)" }} />
@@ -189,11 +251,11 @@ export default function PortfolioSection() {
             <h2 ref={titleRef} style={{ fontSize: "clamp(2.5rem,5vw,4.5rem)", fontWeight: 800, color: "#fff", lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: "0.75rem" }}>{PROJECTS[0].client}</h2>
             <p ref={catRef} style={{ color: "#a855f7", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 600, marginBottom: "1.25rem" }}>{PROJECTS[0].category}</p>
             <p ref={descRef} style={{ color: "rgba(255,255,255,0.6)", fontSize: "1rem", lineHeight: 1.7, maxWidth: "400px", marginBottom: "2rem" }}>{PROJECTS[0].description}</p>
-            <a href="#contact"
+            <a ref={linkRef} href={PROJECTS[0].link} target="_blank" rel="noreferrer"
               style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.7rem 1.6rem", borderRadius: "999px", border: "1.5px solid rgba(255,255,255,0.3)", color: "#fff", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", width: "fit-content" }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; e.currentTarget.style.borderColor = "#a855f7"; }}
               onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}
-            >View Project ↗</a>
+            >Visit Site ↗</a>
           </div>
 
           {/* Bottom-right thumbnail cards */}

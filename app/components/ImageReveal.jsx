@@ -78,7 +78,7 @@ export default function ImageReveal() {
         className="relative z-10 text-center text-white opacity-0 pointer-events-none select-none"
       >
         <p className="text-white/60 text-xs tracking-[0.35em] uppercase mb-4">
-          Since 2019
+          Since 2024
         </p>
         <h2
           className="font-display leading-none tracking-wide"

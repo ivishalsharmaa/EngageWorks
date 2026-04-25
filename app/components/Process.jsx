@@ -36,7 +36,7 @@ export default function Process() {
   const [active, setActive] = useState(0);
 
   return (
-    <section className="py-32 md:py-48 px-8 md:px-16 bg-[#f7f6f2] relative overflow-hidden">
+    <section className="pt-16 pb-16 md:pt-24 md:pb-24 px-8 md:px-16 bg-[#f7f6f2] relative overflow-hidden">
       <div className="section-divider absolute top-0 left-0 right-0" />
 
       <div className="max-w-[1440px] mx-auto">

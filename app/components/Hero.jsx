@@ -6,8 +6,16 @@ const FLOW_IMAGES = [
   "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=400&fit=crop&q=80",
   "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=400&fit=crop&q=80",
   "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=400&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=400&fit=crop&q=80",
-  "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&h=400&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1484807352052-23338990c6c6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fGRpZ2l0YWwlMjBtYXJrZXRpbmd8ZW58MHx8MHx8fDA%3D",
+  "https://images.unsplash.com/photo-1641951820920-c90394aef512?q=80&w=880&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://plus.unsplash.com/premium_photo-1733306696471-807493ff845b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NTN8fGRpZ2l0YWwlMjBtYXJrZXRpbmd8ZW58MHx8MHx8fDA%3D",
+  "https://plus.unsplash.com/premium_photo-1685283298465-e52e933a3312?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OTN8fGRpZ2l0YWwlMjBtYXJrZXRpbmd8ZW58MHx8MHx8fDA%3D",
+  "https://plus.unsplash.com/premium_photo-1683798464819-d1376249293e?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjE3fHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8fDB8fHww",
+  "https://plus.unsplash.com/premium_photo-1661515793199-fc2b079893c3?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjYxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8fDB8fHww",
+  "https://plus.unsplash.com/premium_photo-1683872921964-25348002a392?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8ZGlnaXRhbCUyMG1hcmtldGluZ3xlbnwwfHwwfHx8MA%3D%3D",
+  "https://plus.unsplash.com/premium_photo-1726812103168-6ad609e53f94?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTA1fHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8fDB8fHww",
+  "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?q=80&w=1174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1674027392842-29f8354e236c?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTk5fHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8fDB8fHww"
 ];
 
 const ScrambleText = ({ text, delay = 0, start = false }) => {
@@ -18,7 +26,7 @@ const ScrambleText = ({ text, delay = 0, start = false }) => {
 
     let timeout;
     let interval;
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*+<>?[]{}";
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     timeout = setTimeout(() => {
       let iterations = 0;
@@ -53,13 +61,16 @@ export default function Hero({ introComplete = false }) {
   const [images, setImages] = useState([]);
   const nextIdRef = useRef(0);
   const lastSpawnTimeRef = useRef(0);
+  const imageIndexRef = useRef(0); // Tracks sequential position in FLOW_IMAGES
   const rafRef = useRef(null);
   const mouseHistoryRef = useRef([]);
   const directionRef = useRef({ x: 0, y: 0 });
   const sectionRef = useRef(null); // Hero section reference
 
   const spawnImage = useCallback((mouseX, mouseY, dirX, dirY) => {
-    const randomImage = FLOW_IMAGES[Math.floor(Math.random() * FLOW_IMAGES.length)];
+    // Cycle through images sequentially, then repeat
+    const sequentialImage = FLOW_IMAGES[imageIndexRef.current % FLOW_IMAGES.length];
+    imageIndexRef.current += 1;
     const randomRotation = (Math.random() - 0.5) * 10;
     const randomScale = 0.7 + Math.random() * 0.3;
     
@@ -70,7 +81,7 @@ export default function Hero({ introComplete = false }) {
       rotation: randomRotation,
       scale: randomScale,
       opacity: 1,
-      imageSrc: randomImage,
+      imageSrc: sequentialImage,
       velocityX: dirX * 0.8, // Slower movement
       velocityY: dirY * 0.8,
       createdAt: Date.now(),
@@ -192,7 +203,7 @@ export default function Hero({ introComplete = false }) {
       </div>
 
       {/* SQUARE IMAGES - Only in hero section */}
-      <div className="fixed inset-0 pointer-events-none z-30">
+      <div className="absolute inset-0 pointer-events-none z-30">
         {images.map((img) => (
           <div
             key={img.id}

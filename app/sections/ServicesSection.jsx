@@ -117,7 +117,7 @@ export default function ServicesSection() {
         end: `+=${totalCards * 120}%`,
         pin: true,
         anticipatePin: 1,
-        scrub: 1.0,
+        scrub: 1.2,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           const activeCard = Math.min(
@@ -128,21 +128,19 @@ export default function ServicesSection() {
             gsap.to(dot, {
               width:   i === activeCard ? 40 : 8,
               opacity: i === activeCard ? 1  : 0.3,
-              duration: 0.3,
+              duration: 0.5,
+              ease: "power2.inOut",
             })
           );
         },
       },
     });
 
-    // Hold the first card for a beat
-    mainTimeline.to({}, { duration: 0.3 }, 0);
-
     // STEP 3: ANIMATE EACH CARD TRANSITION
     // On every step, recalculate all cards' fan positions relative to the new active index
     SERVICES.forEach((_, activeIdx) => {
       if (activeIdx === 0) return;
-      const segmentStart = activeIdx * 1;
+      const segmentStart = (activeIdx - 1) * 1;
 
       cards.forEach((card, cardIdx) => {
         const rel = cardIdx - activeIdx;
@@ -159,10 +157,10 @@ export default function ServicesSection() {
             filter:   pos.filter,
             // only unhide cards coming into view, never re-hide mid-animation
             ...(pos.visibility === "visible" ? { visibility: "visible" } : {}),
-            duration: 0.5,
-            ease: rel === 0 ? "back.out(0.7)" : "power2.inOut",
+            duration: 0.9,
+            ease: rel === 0 ? "back.out(1.2)" : "power3.inOut",
           },
-          segmentStart
+          segmentStart - 0.15   // slight overlap so cards move together
         );
       });
     });

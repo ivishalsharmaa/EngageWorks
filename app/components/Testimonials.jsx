@@ -1,6 +1,21 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const AnimatedText = ({ text }) => {
+  return (
+    <>
+      {text.split(" ").map((word, i) => (
+        <span key={i} className="inline-block mr-[0.25em] test-word" style={{ willChange: "opacity, transform, filter" }}>
+          {word}
+        </span>
+      ))}
+    </>
+  );
+};
 
 const TESTIMONIALS = [
   { name: "Sarah Jenkins", role: "CEO, Lumina Tech",        quote: "Engage Works completely transformed our digital presence. Our conversion rates have doubled since launch. The design quality is simply unmatched.", avatar: "SJ" },
@@ -16,21 +31,44 @@ export default function Testimonials() {
   const goTo = (i) => {
     if (i === active) return;
     const q = quoteRef.current;
-    gsap.to(q, { opacity: 0, y: -16, duration: 0.25, onComplete: () => {
+    
+    // Animate out container
+    gsap.to(q, { opacity: 0, y: -10, duration: 0.25, onComplete: () => {
       setActive(i);
-      gsap.fromTo(q, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" });
+      
+      // Reset container
+      gsap.set(q, { opacity: 1, y: 0 });
+      
+      // Animate new words in after state updates
+      setTimeout(() => {
+        gsap.set(".test-word", { opacity: 0, y: 10, filter: "blur(6px)" });
+        gsap.to(".test-word", { opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.015, duration: 0.6, ease: "power2.out" });
+      }, 10);
     }});
   };
 
+  // Initial load animation
   useEffect(() => {
-    const iv = setInterval(() => setActive(p => (p + 1) % TESTIMONIALS.length), 5000);
-    return () => clearInterval(iv);
+    const ctx = gsap.context(() => {
+      gsap.set(".test-word", { opacity: 0, y: 10, filter: "blur(6px)" });
+      gsap.to(".test-word", {
+        opacity: 1, y: 0, filter: "blur(0px)", stagger: 0.015, duration: 0.6, ease: "power2.out",
+        scrollTrigger: { trigger: quoteRef.current, start: "top 85%" }
+      });
+    }, quoteRef);
+    return () => ctx.revert();
   }, []);
+
+  // Auto-play interval
+  useEffect(() => {
+    const iv = setInterval(() => goTo((active + 1) % TESTIMONIALS.length), 6000);
+    return () => clearInterval(iv);
+  }, [active]);
 
   const t = TESTIMONIALS[active];
 
   return (
-    <section className="py-32 md:py-48 px-8 md:px-16 bg-white relative overflow-hidden">
+    <section className="pt-16 pb-12 md:pt-24 md:pb-20 px-8 md:px-16 bg-white relative overflow-hidden">
       <div className="section-divider absolute top-0 left-0 right-0" />
 
       <div className="max-w-[1440px] mx-auto">
@@ -45,8 +83,8 @@ export default function Testimonials() {
           {/* Quote */}
           <div ref={quoteRef}>
             <div className="font-display text-[4rem] leading-none text-purple-200 mb-4 select-none">"</div>
-            <p className="text-gray-700 text-2xl md:text-3xl leading-[1.5] font-light max-w-3xl mb-10">
-              {t.quote}
+            <p className="text-gray-700 text-2xl md:text-3xl leading-[1.5] font-light max-w-3xl mb-10 flex flex-wrap">
+              <AnimatedText text={t.quote} />
             </p>
             <div className="flex items-center gap-4">
               <div className="w-11 h-11 rounded-full bg-purple-600 flex items-center justify-center font-semibold text-sm text-white shrink-0">

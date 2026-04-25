@@ -52,27 +52,34 @@ body {
 /* ─── CUSTOM CURSOR ─── */
 #cursor-ring {
   position: fixed;
-  width: 48px; height: 48px;
+  width: 36px; height: 36px;
   border-radius: 50%;
-  border: 1.5px solid rgba(139,92,246,0.6);
+  border: 1.5px solid white;
   pointer-events: none;
   z-index: 10000;
   transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s;
+  transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s, border-color 0.3s;
+  mix-blend-mode: difference;
 }
 #cursor-ring.expanded {
-  width: 80px; height: 80px;
-  background: rgba(139,92,246,0.1);
-  border-color: #8b5cf6;
+  width: 72px; height: 72px;
+  background: white;
+  border-color: transparent;
 }
 #cursor-dot {
   position: fixed;
-  width: 5px; height: 5px;
+  width: 6px; height: 6px;
   border-radius: 50%;
-  background: #8b5cf6;
+  background: white;
   pointer-events: none;
   z-index: 10001;
   transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  transition: opacity 0.2s;
+}
+/* Hide the center dot when the ring is expanded */
+a:hover ~ #cursor-dot, button:hover ~ #cursor-dot, [data-cursor]:hover ~ #cursor-dot {
+  opacity: 0;
 }
 
 /* ─── HERO ─── */

@@ -7,10 +7,10 @@ import { FaInstagram } from "react-icons/fa6";
 gsap.registerPlugin(ScrollTrigger);
 
 const IG_POSTS = [
-  { src: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=900&h=700&fit=crop", label: "Social Media Strategy" },
-  { src: "https://images.unsplash.com/photo-1559028012-481c04fa702d?w=900&h=700&fit=crop", label: "Content Creation" },
-  { src: "https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?w=900&h=700&fit=crop", label: "Brand Identity" },
-  { src: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&h=700&fit=crop", label: "Performance Marketing" },
+  { src: "https://images.unsplash.com/photo-1709281847981-73a69aa6f770?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8ODR8fGRpZ2l0YWwlMjBtYXJrZXRpbmd8ZW58MHx8MHx8fDA%3D", label: "Social Media Strategy" },
+  { src: "https://images.unsplash.com/photo-1674027392838-d85710a5121d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTAwfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8fDB8fHww", label: "Content Creation" },
+  { src: "https://plus.unsplash.com/premium_photo-1726812103168-6ad609e53f94?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTA1fHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8fDB8fHww", label: "Brand Identity" },
+  { src: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjA3fHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDB8fDB8fHww", label: "Performance Marketing" },
   { src: "https://images.unsplash.com/photo-1587440871875-191322ee64b0?w=900&h=700&fit=crop", label: "Web Development" },
 ];
 
@@ -49,17 +49,13 @@ export default function InstagramSection() {
         // Next card: slides up from below
         tl.to(imgs[i + 1], { y: "0%",                  duration: 1, ease: "none" }, i);
       }
-
-      const ro = new ResizeObserver(() => ScrollTrigger.refresh());
-      if (containerRef.current) ro.observe(containerRef.current);
-      return () => ro.disconnect();
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={containerRef} className="bg-[#f7f6f2] relative overflow-hidden">
+    <section ref={containerRef} className="bg-[#f7f6f2] relative overflow-clip">
       <div className="section-divider absolute top-0 left-0 right-0" />
 
       {/* Header — outside the pin so it scrolls away */}
@@ -100,18 +96,19 @@ export default function InstagramSection() {
           alignItems: "center",
           justifyContent: "center",
           overflow: "hidden",
-          padding: "1.5rem",
+          padding: 0,
         }}
       >
         <div
           style={{
             position: "relative",
-            width: "100%",
-            maxWidth: "680px",
-            height: "75vh",
-            maxHeight: "520px",
+            width: "92vw",
+            maxWidth: "1400px",
+            height: "85vh",
+            maxHeight: "900px",
             overflow: "hidden",   // clips cards at y:100% so they're invisible until they slide in
-            borderRadius: "20px",
+            borderRadius: "32px",
+            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
           }}
         >
           {IG_POSTS.map((post, i) => (
@@ -124,7 +121,7 @@ export default function InstagramSection() {
               style={{
                 position: "absolute",
                 inset: 0,
-                borderRadius: "20px",
+                borderRadius: "32px",
                 overflow: "hidden",
                 display: "block",
                 transformOrigin: "bottom center",
