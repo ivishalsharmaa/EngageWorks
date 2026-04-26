@@ -236,15 +236,30 @@ export default function Hero({ introComplete = false }) {
 
         
         <h1 
-          className="font-display tracking-wide text-center leading-[0.9] mb-6 mt-16"
+          className="font-display tracking-wide text-center leading-[0.9] mb-6 -mt-12 md:mt-16"
           style={{ 
             fontSize: "clamp(2.8rem, 10vw, 8rem)",
           }}
         >
-          <span className="text-gray-900 block">
+          {/* Mobile View */}
+          <span className="md:hidden block text-gray-900">
             <ScrambleText text="WE BUILD" delay={0} start={introComplete} />
           </span>
-          <span className="grad block">
+          <span className="md:hidden block grad">
+            <ScrambleText text="BRANDS" delay={200} start={introComplete} />
+          </span>
+          <span className="md:hidden block grad">
+            <ScrambleText text="THAT" delay={400} start={introComplete} />
+          </span>
+          <span className="md:hidden block grad">
+            <ScrambleText text="CONVERT" delay={600} start={introComplete} />
+          </span>
+
+          {/* Desktop View */}
+          <span className="hidden md:block text-gray-900">
+            <ScrambleText text="WE BUILD" delay={0} start={introComplete} />
+          </span>
+          <span className="hidden md:block grad">
             <ScrambleText text="BRANDS THAT CONVERT" delay={600} start={introComplete} />
           </span>
         </h1>

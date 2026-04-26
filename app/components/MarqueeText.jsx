@@ -23,21 +23,22 @@ export default function MarqueeText() {
 
   return (
     <div
-      className="bg-[#f7f6f2] border-y border-black/[0.06] overflow-hidden"
-      style={{ padding: "3.5rem 0" }}
+      className="bg-[#f7f6f2] border-y border-black/[0.06] overflow-hidden px-6 md:px-0"
+      style={{ paddingTop: "3.5rem", paddingBottom: "3.5rem" }}
     >
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
         <p
           ref={textRef}
-          className="font-display whitespace-nowrap leading-none select-none"
+          className="font-display leading-none select-none text-center"
           style={{
             letterSpacing: "0.02em",
-            lineHeight:    1,
-            display:       "block",
-            width:         "max-content",
+            lineHeight: 1.1,
+            width: "max-content",
           }}
         >
-          <span style={{ color: "#111111" }}>DIGITAL&nbsp;</span>
+          <span style={{ color: "#111111" }}>DIGITAL</span>
+          <span className="hidden md:inline">&nbsp;</span>
+          <br className="block md:hidden" />
           <span style={{ color: "#8b5cf6" }}>MARKETING</span>
         </p>
       </div>

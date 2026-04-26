@@ -11,10 +11,10 @@ export default function Footer() {
 
 
       <div className="max-w-[1440px] mx-auto relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 pb-16 border-b border-black/[0.07]">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-12 md:gap-16 pb-8 border-b border-black/[0.07]">
 
           {/* Brand */}
-          <div>
+          <div className="col-span-2 md:col-span-1">
             <Link href="/" className="block mb-6">
               <span className="font-display text-2xl tracking-widest text-gray-900">ENGAGE</span>
               <span className="font-display text-2xl tracking-widest text-purple-600">WORKS</span>
@@ -54,11 +54,10 @@ export default function Footer() {
             <ul className="flex flex-col gap-3 text-sm text-gray-500">
               <li><a href="https://wa.me/916371106588" target="_blank" rel="noreferrer" className="hover-line hover:text-gray-900 transition-colors duration-300">+91 63711 06588</a></li>
               <li><a href="tel:+919023884833" className="hover-line hover:text-gray-900 transition-colors duration-300">+91 90238 84833</a></li>
-              <li><a href="mailto:engageworks00@gmail.com" className="hover-line hover:text-gray-900 transition-colors duration-300">engageworks00@gmail.com</a></li>
+              <li><a href="mailto:engageworks00@gmail.com" className="hover-line hover:text-gray-900 transition-colors duration-300 break-all md:break-normal">engageworks00@gmail.com</a></li>
               <li><a href="https://instagram.com/_engage.works_" target="_blank" rel="noreferrer" className="hover-line hover:text-gray-900 transition-colors duration-300">@_engage.works_</a></li>
               <li className="text-gray-400">Jharsuguda, India</li>
             </ul>
-            <a href="#contact" className="btn-primary mt-8 inline-flex text-xs py-3 px-6">Start a Project ↗</a>
           </div>
         </div>
 

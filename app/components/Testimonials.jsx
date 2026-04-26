@@ -18,10 +18,8 @@ const AnimatedText = ({ text }) => {
 };
 
 const TESTIMONIALS = [
-  { name: "Sarah Jenkins", role: "CEO, Lumina Tech",        quote: "Engage Works completely transformed our digital presence. Our conversion rates have doubled since launch. The design quality is simply unmatched.", avatar: "SJ" },
-  { name: "Michael Chen",  role: "Founder, Nova Fitness",    quote: "The team's attention to detail and creative approach is unlike anything I've experienced. They perfectly captured the energy of our brand.",       avatar: "MC" },
-  { name: "Emma Rasmus",   role: "Marketing Director, Vela", quote: "Working with Engage Works was seamless. They delivered a stunning e-commerce experience our customers genuinely love and keeps them coming back.",  avatar: "ER" },
-  { name: "Rohan Mehta",   role: "Co-founder, Aura Dining",  quote: "Our reservation rate went up 3x after the website launch. The visual storytelling they created for our brand is exceptional.",                       avatar: "RM" },
+  { name: "Shlok Dhabalia", role: "Founder, Engage Works", quote: "Our approach blends cutting-edge design with strategic marketing. We don't just build websites; we create powerful digital assets that convert visitors into loyal customers.", avatar: "SD" },
+  { name: "Vishal Sharma", role: "Co-founder, Engage Works", quote: "We built Engage Works with a single mission: to craft premium digital experiences that elevate brands and drive meaningful growth in the modern web.", avatar: "VS" },
 ];
 
 export default function Testimonials() {
@@ -73,9 +71,9 @@ export default function Testimonials() {
 
       <div className="max-w-[1440px] mx-auto">
         <div className="mb-16">
-          <p className="section-label mb-5">Testimonials</p>
+          <p className="section-label mb-5">Leadership</p>
           <h2 className="font-display text-gray-900 leading-[0.9] tracking-wide" style={{ fontSize: "clamp(3rem,6vw,7rem)" }}>
-            What clients <span className="grad">say</span>
+            Meet the <span className="grad">founders</span>
           </h2>
         </div>
 

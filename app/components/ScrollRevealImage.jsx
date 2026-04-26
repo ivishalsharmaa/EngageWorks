@@ -52,9 +52,9 @@ export default function ScrollRevealImage() {
         <div className="absolute inset-0 bg-black/10" />
 
         {/* Optional Brand Text that appears with image */}
-        <div className="absolute bottom-20 left-20">
-          <h2 className="font-display text-white text-8xl leading-none tracking-tight">
-            CRAFTED WITH <br /> <span className="text-purple-400">PRECISION</span>
+        <div className="absolute top-1/2 -translate-y-1/2 md:top-auto md:translate-y-0 w-full flex justify-center text-center md:block md:w-auto md:text-left md:bottom-20 md:left-20 px-4 md:px-0">
+          <h2 className="font-display text-white text-6xl sm:text-7xl md:text-8xl leading-[1.1] md:leading-none tracking-tight">
+            CRAFTED <br className="md:hidden" /> WITH <br /> <span className="text-purple-400">PRECISION</span>
           </h2>
         </div>
       </div>

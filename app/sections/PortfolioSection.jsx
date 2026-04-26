@@ -212,7 +212,7 @@ export default function PortfolioSection() {
       >
 
         {/* GROWTH | tiny-image | STORIES */}
-        <div className="flex items-center justify-center w-full px-12" style={{ gap: "1.5rem", position: "relative", zIndex: 10 }}>
+        <div className="flex flex-col md:flex-row items-center justify-center w-full px-12 gap-2 md:gap-6" style={{ position: "relative", zIndex: 10 }}>
           <div ref={leftTextRef} style={{ flexShrink: 0 }}>
             <span style={{ display: "block", whiteSpace: "nowrap", fontWeight: 800, fontSize: "clamp(2rem,5vw,4rem)", letterSpacing: "-0.02em", background: "linear-gradient(135deg,#9333ea,#a855f7,#7c3aed)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               GROWTH
@@ -240,12 +240,15 @@ export default function PortfolioSection() {
               style={{ position: "absolute", inset: 0, opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 1 : 0, willChange: "opacity, clip-path" }}>
               <img src={p.image} alt={p.client} draggable={false}
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.08) 100%)" }} />
+              {/* Mobile overlay */}
+              <div className="absolute inset-0 bg-black/60 md:hidden" />
+              {/* Desktop overlay */}
+              <div className="hidden md:block absolute inset-0" style={{ background: "linear-gradient(to right, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.35) 55%, rgba(0,0,0,0.08) 100%)" }} />
             </div>
           ))}
 
           {/* Left info panel */}
-          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: "52%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 4rem", zIndex: 10 }}>
+          <div className="absolute inset-y-0 left-0 w-full md:w-[52%] flex flex-col justify-center px-6 md:px-16 z-10 pb-24 md:pb-0">
             <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.7rem", letterSpacing: "0.28em", textTransform: "uppercase", fontWeight: 600, marginBottom: "1.25rem" }}>SELECTED WORK</p>
             <div ref={numRef} style={{ fontSize: "clamp(5rem,10vw,9rem)", fontWeight: 900, color: "rgba(255,255,255,0.06)", lineHeight: 1, marginBottom: "-1.5rem" }}>{PROJECTS[0].number}</div>
             <h2 ref={titleRef} style={{ fontSize: "clamp(2.5rem,5vw,4.5rem)", fontWeight: 800, color: "#fff", lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: "0.75rem" }}>{PROJECTS[0].client}</h2>
@@ -259,7 +262,7 @@ export default function PortfolioSection() {
           </div>
 
           {/* Bottom-right thumbnail cards */}
-          <div style={{ position: "absolute", bottom: "2rem", right: "2rem", display: "flex", gap: "0.6rem", alignItems: "flex-end", zIndex: 20 }}>
+          <div className="absolute bottom-4 right-4 md:bottom-8 md:right-8 flex gap-2 items-end z-20">
             {PROJECTS.map((p, i) => (
               <div key={p.client} ref={el => { cardRefs.current[i] = el; }}
                 style={{ width: "96px", height: "66px", borderRadius: "8px", overflow: "hidden", border: `2px solid ${i === 0 ? "#a855f7" : "rgba(255,255,255,0.18)"}`, transform: `scale(${i === 0 ? 1.08 : 1})`, transformOrigin: "bottom center", position: "relative", flexShrink: 0 }}>
@@ -271,7 +274,7 @@ export default function PortfolioSection() {
           </div>
 
           {/* Right vertical progress dots */}
-          <div style={{ position: "absolute", right: "2rem", top: "50%", transform: "translateY(-50%)", display: "flex", flexDirection: "column", gap: "6px", zIndex: 20 }}>
+          <div className="hidden md:flex absolute right-8 top-1/2 -translate-y-1/2 flex-col gap-1.5 z-20">
             {PROJECTS.map((_, i) => (
               <div key={i} ref={el => { dotRefs.current[i] = el; }}
                 style={{ width: "2px", borderRadius: "1px", height: i === 0 ? 28 : 8, backgroundColor: i === 0 ? "#a855f7" : "rgba(255,255,255,0.3)" }} />
