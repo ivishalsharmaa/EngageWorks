@@ -6,10 +6,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const STATS = [
-  { num: "150+",  label: "Happy Clients"      },
-  { num: "320+",  label: "Projects Delivered"  },
-  { num: "5+",    label: "Years of Excellence" },
-  { num: "98%",   label: "Client Retention"    },
+  { num: "10+",  label: "Happy Clients"      },
+  { num: "4",    label: "Projects Delivered"  },
+  { num: "2",    label: "Years of Excellence" },
+  { num: "95%",  label: "Client Retention"    },
 ];
 
 const AnimatedText = ({ text }) => {
