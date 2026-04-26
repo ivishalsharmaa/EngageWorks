@@ -80,7 +80,7 @@ export default function Testimonials() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-16 items-start">
           {/* Quote */}
           <div ref={quoteRef}>
-            <div className="font-display text-[4rem] leading-none text-purple-200 mb-4 select-none">"</div>
+            <div className="font-display text-[4rem] leading-none text-purple-200 mb-4 select-none">&quot;</div>
             <p className="text-gray-700 text-2xl md:text-3xl leading-[1.5] font-light max-w-3xl mb-10 flex flex-wrap">
               <AnimatedText text={t.quote} />
             </p>

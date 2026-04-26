@@ -89,7 +89,7 @@ export default function ImageReveal() {
           <span className="text-purple-400">IMPACT</span>
         </h2>
         <p className="text-white/50 mt-6 text-lg max-w-md mx-auto">
-          Jharsuguda's premium digital agency
+          Jharsuguda&apos;s premium digital agency
         </p>
       </div>
     </section>

@@ -3,7 +3,6 @@
 
 /* ─── CURSOR ─── */
 *, *::before, *::after {
-  cursor: none !important;
   box-sizing: border-box;
 }
 
@@ -49,38 +48,7 @@ body {
   background-clip: text;
 }
 
-/* ─── CUSTOM CURSOR ─── */
-#cursor-ring {
-  position: fixed;
-  width: 36px; height: 36px;
-  border-radius: 50%;
-  border: 1.5px solid white;
-  pointer-events: none;
-  z-index: 10000;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), height 0.3s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s, border-color 0.3s;
-  mix-blend-mode: difference;
-}
-#cursor-ring.expanded {
-  width: 72px; height: 72px;
-  background: white;
-  border-color: transparent;
-}
-#cursor-dot {
-  position: fixed;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: white;
-  pointer-events: none;
-  z-index: 10001;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
-  transition: opacity 0.2s;
-}
-/* Hide the center dot when the ring is expanded */
-a:hover ~ #cursor-dot, button:hover ~ #cursor-dot, [data-cursor]:hover ~ #cursor-dot {
-  opacity: 0;
-}
+
 
 /* ─── HERO ─── */
 .hero-wrap {

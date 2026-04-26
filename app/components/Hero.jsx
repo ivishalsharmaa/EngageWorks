@@ -94,19 +94,23 @@ export default function Hero({ introComplete = false }) {
     const section = sectionRef.current;
     if (!section) return;
 
-    const handleMouseMove = (e) => {
-      // Check if mouse is inside hero section only
+    const handlePointerMove = (e) => {
+      // Use standard pointer coordinates (works for mouse, touch, pen)
+      const clientX = e.clientX;
+      const clientY = e.clientY;
+
+      // Check if pointer is inside hero section only
       const rect = section.getBoundingClientRect();
-      const isInside = e.clientX >= rect.left && e.clientX <= rect.right &&
-                       e.clientY >= rect.top && e.clientY <= rect.bottom;
+      const isInside = clientX >= rect.left && clientX <= rect.right &&
+                       clientY >= rect.top && clientY <= rect.bottom;
       
       if (!isInside) return; // Effect only in hero section
       
       const now = Date.now();
       const timeSinceLastSpawn = now - lastSpawnTimeRef.current;
       
-      const newX = e.clientX;
-      const newY = e.clientY;
+      const newX = clientX - rect.left;
+      const newY = clientY - rect.top;
       
       mouseHistoryRef.current.push({ x: newX, y: newY, time: now });
       if (mouseHistoryRef.current.length > 3) {
@@ -135,8 +139,13 @@ export default function Hero({ introComplete = false }) {
       }
     };
     
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerdown", handlePointerMove);
+    
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerdown", handlePointerMove);
+    };
   }, [spawnImage]);
 
   useEffect(() => {
@@ -236,19 +245,19 @@ export default function Hero({ introComplete = false }) {
 
         
         <h1 
-          className="font-display tracking-wide text-center leading-[0.9] mb-6 -mt-12 md:mt-16"
+          className="font-display tracking-wide text-center leading-[0.9] mb-6 mt-4 md:mt-16"
           style={{ 
-            fontSize: "clamp(2.8rem, 10vw, 8rem)",
+            fontSize: "clamp(3.5rem, 12vw, 8rem)",
           }}
         >
           {/* Mobile View */}
-          <span className="md:hidden block text-gray-900">
+          <span className="md:hidden block text-gray-900 mb-2">
             <ScrambleText text="WE BUILD" delay={0} start={introComplete} />
           </span>
-          <span className="md:hidden block grad">
+          <span className="md:hidden block grad mb-2">
             <ScrambleText text="BRANDS" delay={200} start={introComplete} />
           </span>
-          <span className="md:hidden block grad">
+          <span className="md:hidden block grad mb-2">
             <ScrambleText text="THAT" delay={400} start={introComplete} />
           </span>
           <span className="md:hidden block grad">

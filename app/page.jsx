@@ -15,7 +15,7 @@ import Testimonials from "./components/Testimonials";
 import InstagramSection from "./components/InstagramSection";
 import CTA from "./components/CTA";
 import Footer from "./components/Footer";
-import CursorFollower from "./components/CursorFollower";
+
 
 export default function Home() {
   const [loaderComplete, setLoaderComplete] = useState(false);
@@ -29,7 +29,7 @@ export default function Home() {
         !introComplete && <GlitchTransition onComplete={() => setIntroComplete(true)} />
       )}
 
-      <CursorFollower />
+
       <Navbar />
       <Hero introComplete={introComplete} />
       <MarqueeText />
