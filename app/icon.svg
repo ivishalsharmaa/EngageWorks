@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <defs>
+    <linearGradient id="ewGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed" />
+      <stop offset="50%" stop-color="#6366f1" />
+      <stop offset="100%" stop-color="#0ea5e9" />
+    </linearGradient>
+  </defs>
+  <!-- Rounded background card with premium gradient -->
+  <rect width="32" height="32" rx="8" fill="url(#ewGradient)" />
+  <!-- Elegant geometric letter 'E' -->
+  <path d="M 12.5 9.5 H 7.5 V 22.5 H 12.5 M 7.5 16 H 11.5" 
+        fill="none" 
+        stroke="#ffffff" 
+        stroke-width="3" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+  <!-- Elegant geometric letter 'W' -->
+  <path d="M 15.5 9.5 L 18 22.5 L 20.5 14.5 L 23 22.5 L 25.5 9.5" 
+        fill="none" 
+        stroke="#ffffff" 
+        stroke-width="3" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" />
+</svg>

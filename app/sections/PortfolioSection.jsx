@@ -37,6 +37,11 @@ export default function PortfolioSection() {
   const switchProject = useCallback((next, prev) => {
     if (next === prev) return;
 
+    // Kill any active animations on the backgrounds to prevent race conditions
+    if (bgRefs.current.length > 0) {
+      gsap.killTweensOf(bgRefs.current.filter(Boolean));
+    }
+
     const goingForward = next > prev;
     const containerEl  = overlayRef.current;
 
@@ -63,8 +68,8 @@ export default function PortfolioSection() {
           clipPath: "inset(0px 0px 0px 0px round 0px)",
           duration: 1.2, ease: "power4.inOut",
           onComplete: () => {
-            gsap.set(bgRefs.current[prev], { opacity: 0, zIndex: 0 });
-            gsap.set(bgRefs.current[next], { zIndex: 1 });
+            gsap.set(bgRefs.current[prev], { opacity: 0, zIndex: 0, clipPath: "none" });
+            gsap.set(bgRefs.current[next], { zIndex: 1, clipPath: "none" });
           }
         });
 
@@ -89,9 +94,8 @@ export default function PortfolioSection() {
           clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px round 8px)`,
           duration: 1.2, ease: "power4.inOut",
           onComplete: () => {
-            gsap.set(bgRefs.current[prev], { opacity: 0, zIndex: 0,
-              clipPath: "inset(0px 0px 0px 0px round 0px)" });
-            gsap.set(bgRefs.current[next], { zIndex: 1 });
+            gsap.set(bgRefs.current[prev], { opacity: 0, zIndex: 0, clipPath: "none" });
+            gsap.set(bgRefs.current[next], { zIndex: 1, clipPath: "none" });
           }
         });
       }
@@ -101,7 +105,7 @@ export default function PortfolioSection() {
       gsap.to(bgRefs.current[next], { opacity: 1, duration: 0.7, ease: "power2.inOut" });
     }
 
-    const els = [numRef.current, titleRef.current, catRef.current, descRef.current];
+    const els = [numRef.current, titleRef.current, catRef.current, descRef.current].filter(Boolean);
     gsap.timeline()
       .to(els, { opacity: 0, y: -20, duration: 0.3, ease: "power3.in", stagger: 0.05 })
       .call(() => {
@@ -139,16 +143,16 @@ export default function PortfolioSection() {
   useEffect(() => {
     const ctx = gsap.context(() => {
       // ── initial states ──
-      gsap.set(imgWrapRef.current,  { width: "24px", height: "18px", borderRadius: "6px" });
+      gsap.set(imgWrapRef.current,  { width: "24px", height: "18px", borderRadius: "6px", opacity: 1 });
       gsap.set(imgRef.current,      { scale: 1, force3D: true });
       gsap.set([leftTextRef.current, rightTextRef.current], { opacity: 1 });
       gsap.set(overlayRef.current,  { opacity: 0 });
       bgRefs.current.forEach((el, i) => el && gsap.set(el, { 
         opacity: i === 0 ? 1 : 0, 
         zIndex: i === 0 ? 1 : 0,
-        clipPath: "inset(0px 0px 0px 0px round 0px)"
+        clipPath: "none"
       }));
-      gsap.set([numRef.current, titleRef.current, catRef.current, descRef.current], { opacity: 1, y: 0 });
+      gsap.set([numRef.current, titleRef.current, catRef.current, descRef.current].filter(Boolean), { opacity: 1, y: 0 });
       cardRefs.current.forEach((c, i) => {
         if (!c) return;
         c.style.borderColor = i === 0 ? "#a855f7" : "rgba(255,255,255,0.18)";
@@ -177,8 +181,14 @@ export default function PortfolioSection() {
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate(self) {
-            // only switch projects after image is fully expanded + overlay is fully visible
-            if (self.progress < showcaseRatio) return;
+            // reset to project 0 when scrolling back up past the active threshold
+            if (self.progress < showcaseRatio) {
+              if (activeIdx.current !== 0) {
+                switchProject(0, activeIdx.current);
+                activeIdx.current = 0;
+              }
+              return;
+            }
             const sp   = (self.progress - showcaseRatio) / (1 - showcaseRatio);
             const next = Math.min(Math.floor(sp * PROJECTS.length), PROJECTS.length - 1);
             if (next !== activeIdx.current) {
@@ -195,6 +205,8 @@ export default function PortfolioSection() {
       tl.to([leftTextRef.current, rightTextRef.current], { opacity: 0, ease: "none", duration: heroDur / 3 }, heroDur / 2);
       // overlay fades in ONLY AFTER image is fully full-screen (starts at heroDur)
       tl.to(overlayRef.current, { opacity: 1, ease: "none", duration: overlayFadeDur }, heroDur);
+      // fade out the expanded hero image wrapper as the showcase overlay fades in
+      tl.to(imgWrapRef.current, { opacity: 0, ease: "none", duration: overlayFadeDur }, heroDur);
       // dummy tween to fill project phase so the timeline has the right duration
       tl.to({}, { duration: totalDur - heroDur }, heroDur);
     }, secRef);
@@ -232,12 +244,12 @@ export default function PortfolioSection() {
         </div>
 
         {/* ── Showcase overlay (fades in on top after hero is full-screen) ── */}
-        <div ref={overlayRef} style={{ position: "absolute", inset: 0, opacity: 0, zIndex: 30 }}>
+        <div ref={overlayRef} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", opacity: 0, zIndex: 30 }}>
 
           {/* Per-project background images */}
           {PROJECTS.map((p, i) => (
             <div key={p.client} ref={el => { bgRefs.current[i] = el; }}
-              style={{ position: "absolute", inset: 0, opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 1 : 0, willChange: "opacity, clip-path" }}>
+              style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", opacity: i === 0 ? 1 : 0, zIndex: i === 0 ? 1 : 0, willChange: "opacity, clip-path" }}>
               <img src={p.image} alt={p.client} draggable={false}
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
               {/* Mobile overlay */}
@@ -252,7 +264,6 @@ export default function PortfolioSection() {
             <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.7rem", letterSpacing: "0.28em", textTransform: "uppercase", fontWeight: 600, marginBottom: "1.25rem" }}>SELECTED WORK</p>
             <div ref={numRef} style={{ fontSize: "clamp(5rem,10vw,9rem)", fontWeight: 900, color: "rgba(255,255,255,0.06)", lineHeight: 1, marginBottom: "-1.5rem" }}>{PROJECTS[0].number}</div>
             <h2 ref={titleRef} style={{ fontSize: "clamp(2.5rem,5vw,4.5rem)", fontWeight: 800, color: "#fff", lineHeight: 1.05, letterSpacing: "-0.02em", marginBottom: "0.75rem" }}>{PROJECTS[0].client}</h2>
-            <p ref={catRef} style={{ color: "#a855f7", fontSize: "0.75rem", letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 600, marginBottom: "1.25rem" }}>{PROJECTS[0].category}</p>
             <p ref={descRef} style={{ color: "rgba(255,255,255,0.6)", fontSize: "1rem", lineHeight: 1.7, maxWidth: "400px", marginBottom: "2rem" }}>{PROJECTS[0].description}</p>
             <a ref={linkRef} href={PROJECTS[0].link} target="_blank" rel="noreferrer"
               style={{ display: "inline-flex", alignItems: "center", gap: "0.5rem", padding: "0.7rem 1.6rem", borderRadius: "999px", border: "1.5px solid rgba(255,255,255,0.3)", color: "#fff", fontSize: "0.75rem", fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", textDecoration: "none", width: "fit-content" }}

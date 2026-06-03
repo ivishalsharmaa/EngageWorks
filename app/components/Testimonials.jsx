@@ -18,8 +18,8 @@ const AnimatedText = ({ text }) => {
 };
 
 const TESTIMONIALS = [
-  { name: "Shlok Dhabalia", role: "Founder, Engage Works", quote: "Our approach blends cutting-edge design with strategic marketing. We don't just build websites; we create powerful digital assets that convert visitors into loyal customers.", avatar: "SD" },
-  { name: "Vishal Sharma", role: "Co-founder, Engage Works", quote: "We built Engage Works with a single mission: to craft premium digital experiences that elevate brands and drive meaningful growth in the modern web.", avatar: "VS" },
+  { name: "Shlok Dhabalia", role: "CEO, Engage Works", quote: "Our approach blends cutting-edge design with strategic marketing. We don't just build websites; we create powerful digital assets that convert visitors into loyal customers.", avatar: "SD" },
+  { name: "Vishal Sharma", role: "COO, Engage Works", quote: "We built Engage Works with a single mission: to craft premium digital experiences that elevate brands and drive meaningful growth in the modern web.", avatar: "VS" },
 ];
 
 export default function Testimonials() {

@@ -37,7 +37,7 @@ export default function Navbar() {
       {/* Logo — absolute so it scrolls away */}
       <div className="absolute top-0 left-0 px-8 md:px-16 py-5 z-[200]">
         <Link href="/" className="flex items-center gap-2">
-          <span className="font-display text-xl tracking-[0.18em] text-gray-900 dark:text-white">ENGAGEWORKS</span>
+          <span className="font-display text-xl tracking-[0.18em] text-[#8b5cf6]">ENGAGEWORKS</span>
         </Link>
       </div>
 

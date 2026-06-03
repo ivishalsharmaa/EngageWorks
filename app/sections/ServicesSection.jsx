@@ -84,13 +84,13 @@ export default function ServicesSection() {
     // Fan carousel positions — cards spread out like a hand of cards
     // rotateZ gives the tilt; y drops side cards slightly; x offsets them horizontally
     const POS = {
-      center:      { x: 0,    y: 0, rotateZ: 0,   scale: 1,    opacity: 1,    zIndex: 20, filter: "blur(0px)",  visibility: "visible"  },
-      right1:      { x: 205,  y: 0, rotateZ: 13,  scale: 0.86, opacity: 0.72, zIndex: 15, filter: "blur(2px)",  visibility: "visible"  },
-      right2:      { x: 355,  y: 0, rotateZ: 24,  scale: 0.72, opacity: 0.45, zIndex: 10, filter: "blur(4px)",  visibility: "visible"  },
-      left1:       { x: -205, y: 0, rotateZ: -13, scale: 0.86, opacity: 0.72, zIndex: 15, filter: "blur(2px)",  visibility: "visible"  },
-      left2:       { x: -355, y: 0, rotateZ: -24, scale: 0.72, opacity: 0.45, zIndex: 10, filter: "blur(4px)",  visibility: "visible"  },
-      hiddenRight: { x: 520,  y: 0, rotateZ: 34,  scale: 0.6,  opacity: 0,    zIndex: 5,  filter: "blur(7px)",  visibility: "hidden"   },
-      hiddenLeft:  { x: -520, y: 0, rotateZ: -34, scale: 0.6,  opacity: 0,    zIndex: 5,  filter: "blur(7px)",  visibility: "hidden"   },
+      center:      { x: 0,    y: 0,   rotateZ: 0,   scale: 1,    opacity: 1,    zIndex: 20, filter: "blur(0px)",  visibility: "visible"  },
+      right1:      { x: 205,  y: 35,  rotateZ: 13,  scale: 0.86, opacity: 0.72, zIndex: 15, filter: "blur(2px)",  visibility: "visible"  },
+      right2:      { x: 355,  y: 70,  rotateZ: 24,  scale: 0.72, opacity: 0.45, zIndex: 10, filter: "blur(4px)",  visibility: "visible"  },
+      left1:       { x: -205, y: 35,  rotateZ: -13, scale: 0.86, opacity: 0.72, zIndex: 15, filter: "blur(2px)",  visibility: "visible"  },
+      left2:       { x: -355, y: 70,  rotateZ: -24, scale: 0.72, opacity: 0.45, zIndex: 10, filter: "blur(4px)",  visibility: "visible"  },
+      hiddenRight: { x: 520,  y: 100, rotateZ: 34,  scale: 0.6,  opacity: 0,    zIndex: 5,  filter: "blur(7px)",  visibility: "hidden"   },
+      hiddenLeft:  { x: -520, y: 100, rotateZ: -34, scale: 0.6,  opacity: 0,    zIndex: 5,  filter: "blur(7px)",  visibility: "hidden"   },
     };
 
     // Get the fan position for a card given its offset from the active index
